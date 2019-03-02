@@ -1,25 +1,23 @@
+import torch
+import torchvision
 import os
-import network
+import numpy as np
 
-current_dr = os.path.join(os.getcwd(), 'Data')
+import Models.Models
+import Utils.Dataset as ds
+import Utils.utils as utils
 
-directories = os.listdir(current_dr)
+image_classes_paths, classes = utils.get_classes_and_paths()
+print(f'Image Classes Paths: {image_classes_paths}, Classes: {classes}')
 
-image_classes = []
-classes = []
+net = Models.Models.vgg16(len(classes))
 
-for direct in directories:
-    if '.' not in direct:
-        image_classes.append(os.path.join(current_dr, direct))
-        classes.append(direct)
+dataset = ds.DataSetCreator(image_classes_paths)
 
-
-def get_classes():
-    return classes
+data_loader = torch.utils.data.DataLoader(dataset, batch_size=4, shuffle=True, num_workers=2)
+dataiter = iter(data_loader)
 
 
-def get_class_paths():
-    return image_classes
-
+# TODO: Get indicies for train, val, and test
 
 

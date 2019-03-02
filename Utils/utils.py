@@ -1,5 +1,43 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+
+def get_indices(n, train_percent=0.8, val_percent=0.1, test_percent=0.1):
+
+    assert train_percent <= 1 and val_percent <= 1 and test_percent <= 1
+    assert train_percent + val_percent + test_percent == 1
+    assert train_percent >= 0 and val_percent >= 0 and test_percent >= 0
+
+    n = n-1
+    non_test_indices = np.random.choice(n, int(n * (1-test_percent)), replace=False)
+
+    test_indices = np.setdiff1d(np.arange(n), non_test_indices, assume_unique=False)
+
+    len_non_train_indices = len(non_test_indices)
+
+    val_indices = np.random.choice(non_test_indices,
+                                   int((len_non_train_indices - 1) * val_percent/(1-test_percent)),
+                                   replace=False)
+
+    train_indices = np.setdiff1d(non_test_indices, val_indices)
+
+    return train_indices, val_indices, test_indices
+
+
+def get_classes_and_paths():
+    current_dr = os.path.join(os.getcwd(), 'Data')
+    directories = os.listdir(current_dr)
+
+    image_classes = []
+    classes = []
+
+    for direct in directories:
+        if '.' not in direct:
+            image_classes.append(os.path.join(current_dr, direct))
+            classes.append(direct)
+
+    return image_classes, classes
 
 
 def show_image(image):

@@ -39,19 +39,16 @@ class DataSetCreator(data.Dataset):
         labels = []
 
         for i, image_class in enumerate(image_paths):
+            images = os.listdir(image_class)
+            labels.append(np.full((len(images)), i))
 
-            labels.append(np.full((len(os.listdir(image_class))), i))
-
-            for image in reversed(os.listdir(image_class)):
+            for image in reversed(images):
                 self.files.append(os.path.join(image_class, image))
 
         for label in labels:
             self.npLabels = np.concatenate((self.npLabels, np.array(label)), axis=None)
 
         self.npLabels = np.delete(self.npLabels, [0])
-
-        print(self.files)
-        print(self.npLabels)
 
         if augment:
             self.tsfm = transform
