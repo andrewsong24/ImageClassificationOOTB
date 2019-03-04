@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import sys
 
 
 def get_indices(n, train_percent=0.8, val_percent=0.1, test_percent=0.1):
@@ -47,4 +48,17 @@ def show_image(image):
     np_img = img.numpy()
     plt.imshow(np.transpose(np_img, (1, 2, 0)))
     plt.show()
+
+
+def update_progress(i, total):
+
+    progress = i / total
+
+    bar_length = 30
+
+    block = int(round(bar_length*progress))
+
+    text = f'\rPercent: [{"█"*block + " "*(bar_length-block)} {round(progress*100, 2)}% {i}/{total}] '
+    sys.stdout.write(text)
+    sys.stdout.flush()
 
