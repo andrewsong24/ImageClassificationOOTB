@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import Models.Models
+from Models.VGG import VGG16
 import Utils.Dataset as ds
 import Utils.utils as utils
 
@@ -9,17 +9,17 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 image_classes_paths, classes = utils.get_classes_and_paths()
 print(f'Image Classes Paths: {image_classes_paths}, Classes: {classes}')
 
-net = Models.Models.vgg16(len(classes))
+# TODO: Get indicies for train and test
 
 dataset = ds.DataSetCreator(image_classes_paths)
 
-data_loader = torch.utils.data.DataLoader(dataset, batch_size=4, shuffle=True, num_workers=2)
-dataiter = iter(data_loader)
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=4, shuffle=True, num_workers=2)
+data_loaders = {'train': train_loader}
 
-net.to(device)
+net = VGG16(len(classes), data_loaders)
 
 if torch.cuda.is_available():
-    net = torch.nn.DataParallel(net)
+    net = torch.nn.DataParallel(net.net)
     criterion = nn.CrossEntropyLoss().cuda()
     dtype = torch.cuda.FloatTensor
 
@@ -28,6 +28,5 @@ else:
     dtype = torch.FloatTensor
 
 
-# TODO: Get indicies for train, val, and test
 
 

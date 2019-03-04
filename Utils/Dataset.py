@@ -31,6 +31,8 @@ non_augment_transform = transforms.Compose(
 
 class DataSetCreator(data.Dataset):
 
+    # TODO: get indicies for test images
+
     def __init__(self, image_paths, augment=True):
 
         self.image_paths = image_paths
