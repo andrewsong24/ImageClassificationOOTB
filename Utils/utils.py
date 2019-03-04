@@ -10,7 +10,6 @@ def get_indices(n, train_percent=0.8, val_percent=0.1, test_percent=0.1):
     assert train_percent + val_percent + test_percent == 1
     assert train_percent >= 0 and val_percent >= 0 and test_percent >= 0
 
-    n = n-1
     non_test_indices = np.random.choice(n, int(n * (1-test_percent)), replace=False)
 
     test_indices = np.setdiff1d(np.arange(n), non_test_indices, assume_unique=False)

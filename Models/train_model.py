@@ -9,7 +9,8 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     save_path = os.path.join(os.getcwd(), 'trained-models/net.pth')
 
-    loss_history = []
+    train_loss_history = []
+    test_loss_history = []
 
     best_acc = 0.0
 
@@ -63,11 +64,11 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += preds.eq(targets).sum().item()
                 total += targets.size(0)
-
+            
             epoch_loss = running_loss / total
             epoch_acc = running_corrects / total
 
-            loss_history.append(epoch_loss)
+            train_loss_history.append(epoch_loss) if phase == 'train' else test_loss_history.append(epoch_loss)
 
             print(f'Loss: {epoch_loss}, Accuracy: {epoch_acc}')
 
@@ -105,4 +106,4 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
 
     model.load_state_dict(best_model_wts)
 
-    return model, loss_history
+    return model, train_loss_history, test_loss_history

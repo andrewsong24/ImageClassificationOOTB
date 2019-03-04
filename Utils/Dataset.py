@@ -31,9 +31,7 @@ non_augment_transform = transforms.Compose(
 
 class DataSetCreator(data.Dataset):
 
-    # TODO: get indicies for test images
-
-    def __init__(self, image_paths, augment=True):
+    def __init__(self, image_paths, indices, augment=True):
 
         self.image_paths = image_paths
         self.npLabels = np.array([1])
@@ -41,7 +39,14 @@ class DataSetCreator(data.Dataset):
         labels = []
 
         for i, image_class in enumerate(image_paths):
-            images = os.listdir(image_class)
+
+            class_indices = indices[i]
+            images = []
+            all_images = os.listdir(image_class)
+
+            for index in class_indices:
+                images.append(all_images[index])
+
             labels.append(np.full((len(images)), i))
 
             for image in reversed(images):

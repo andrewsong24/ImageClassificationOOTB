@@ -7,14 +7,15 @@ class VGG16:
     def __init__(self, num_classes, data_loaders):
         self.net = models.vgg16(num_classes)
         self.data_loaders = data_loaders
-        self.loss_history = None
+        self.train_loss_history = None
+        self.test_loss_history = None
 
     def train(self, criterion, optim, scheduler=None, num_epochs=50):
 
-        self.net, self.loss_history = \
+        self.net, self.train_loss_history, self.test_loss_history = \
             train_model.train(self.net, criterion, optim, self.data_loaders, scheduler, num_epochs)
 
-    def test(self, inputs):
+    def single_test(self, inputs):
         return self.net(inputs)
 
     def to(self, device):
