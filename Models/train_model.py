@@ -64,7 +64,7 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += preds.eq(targets).sum().item()
                 total += targets.size(0)
-            
+
             epoch_loss = running_loss / total
             epoch_acc = running_corrects / total
 
