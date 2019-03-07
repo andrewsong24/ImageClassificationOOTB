@@ -28,7 +28,7 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
                 model.train()
             else:
                 model.eval()
-
+            
             running_loss = 0.0
             running_corrects = 0
             total = 0
