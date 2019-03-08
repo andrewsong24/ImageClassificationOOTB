@@ -14,7 +14,7 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
 
     best_acc = 0.0
 
-    for epoch in range(num_epochs-1):
+    for epoch in range(num_epochs):
 
         print(f'\nEpoch: {epoch+1}/{num_epochs}')
 
@@ -28,7 +28,7 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
                 model.train()
             else:
                 model.eval()
-            
+
             running_loss = 0.0
             running_corrects = 0
             total = 0

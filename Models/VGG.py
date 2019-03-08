@@ -4,8 +4,10 @@ import Models.Models as models
 
 class VGG16:
 
-    def __init__(self, num_classes, data_loaders):
-        self.net = models.vgg16(num_classes)
+    def __init__(self, num_classes, data_loaders, freeze_layers=40):
+        if freeze_layers <= 0:
+            freeze_layers = 0
+        self.net = models.vgg16(num_classes, freeze_layers)
         self.data_loaders = data_loaders
         self.train_loss_history = None
         self.test_loss_history = None
