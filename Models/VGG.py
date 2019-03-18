@@ -1,5 +1,7 @@
 from Models import train_model
 import Models.Models as models
+import torch
+import os
 
 
 class VGG16:
@@ -23,3 +25,14 @@ class VGG16:
     def to(self, device):
         self.net.to(device)
 
+    def get_torch_script(self):
+        path = os.path.join(os.path.join(os.getcwd(), 'trained-models'), 'net.pth')
+        model = self.net
+        model.load_state_dict(torch.load(path))
+
+        example = torch.rand(1, 3, 224, 224)
+        traced_module = torch.jit.trace(model, example)
+
+        save_path = os.path.join(os.path.join(os.getcwd(), 'trained-models'), 'prod-module')
+
+        traced_module.save(save_path)

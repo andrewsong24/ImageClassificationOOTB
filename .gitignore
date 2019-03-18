@@ -3,3 +3,4 @@
 /__pycache__/*
 /Data/*
 /trained-models/*
+/Production-Example/ProdExample/.idea/*

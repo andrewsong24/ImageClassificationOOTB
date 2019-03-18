@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.optim as optim
 import os
 
 from Models.VGG import VGG16
@@ -43,4 +44,7 @@ else:
     criterion = nn.CrossEntropyLoss()
     dtype = torch.FloatTensor
 
+optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()))
+
+net.train(criterion, optimizer, num_epochs=10)
 

@@ -1,4 +1,4 @@
-# ImageClassification Out of the Box (Still WIP)
+# Image Classification Out of the Box (Still WIP)
 
 A way to use image classification **without** any programming or machine learning knowledge/experience.  
 

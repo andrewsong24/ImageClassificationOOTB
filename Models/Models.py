@@ -1,5 +1,6 @@
 import torchvision.models as models
 import torch.nn as nn
+import os
 
 
 def vgg16(num_classes, freeze_layers=40):
@@ -13,3 +14,9 @@ def vgg16(num_classes, freeze_layers=40):
             param.requires_grad = False
     return model
 
+
+def get_torch_script():
+
+    path = os.path.join(os.path.join(os.getcwd(), 'trained-models'), 'net.pth')
+
+    model = vgg16()
