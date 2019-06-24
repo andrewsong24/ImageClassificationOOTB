@@ -25,8 +25,8 @@ def get_indices(n, train_percent=0.8, val_percent=0.1, test_percent=0.1):
     return train_indices, val_indices, test_indices
 
 
-def get_classes_and_paths():
-    current_dr = os.path.join(os.path.join(os.getcwd(), 'Data'), 'TrainImages')
+def get_classes_and_paths(data_folder_path):
+    current_dr = os.path.join(os.path.join(os.getcwd(), data_folder_path), 'TrainImages')
     directories = os.listdir(current_dr)
 
     image_classes = []
@@ -38,6 +38,7 @@ def get_classes_and_paths():
             classes.append(direct)
 
     return image_classes, classes
+
 
 
 def show_image(image):

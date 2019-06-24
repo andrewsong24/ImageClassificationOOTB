@@ -7,44 +7,61 @@ from Models.VGG import VGG16
 import Utils.Dataset as ds
 import Utils.utils as utils
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+import argparse
 
-image_classes_paths, classes = utils.get_classes_and_paths()
 
-train_indices = []
-test_indices = []
+def main(args):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-for i_class in image_classes_paths:
-    class_len = len(os.listdir(i_class))
+    image_classes_paths, classes = utils.get_classes_and_paths(args.dataFolder)
 
-    train, val, test = \
-        utils.get_indices(class_len, train_percent=0.8, val_percent=0.0, test_percent=0.2)
+    train_indices = []
+    test_indices = []
 
-    train_indices.append(train)
-    test_indices.append(test)
+    for i_class in image_classes_paths:
+        class_len = len(os.listdir(i_class))
 
-train_set = ds.DataSetCreator(image_classes_paths, train_indices)
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=4, shuffle=True, num_workers=2)
+        train, val, test = \
+            utils.get_indices(class_len, train_percent=0.8, val_percent=0.0, test_percent=0.2)
 
-test_set = ds.DataSetCreator(image_classes_paths, test_indices, augment=False)
-test_loader = torch.utils.data.DataLoader(train_set, batch_size=4, shuffle=True, num_workers=2)
+        train_indices.append(train)
+        test_indices.append(test)
 
-data_loaders = {'train': train_loader, 'test': test_loader}
+    train_set = ds.DataSetCreator(image_classes_paths, train_indices)
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=4, shuffle=True, num_workers=2)
 
-net = VGG16(len(classes), data_loaders)
+    test_set = ds.DataSetCreator(image_classes_paths, test_indices, augment=False)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=4, shuffle=True, num_workers=2)
 
-net.to(device)
+    data_loaders = {'train': train_loader, 'test': test_loader}
 
-if torch.cuda.is_available():
-    net = torch.nn.DataParallel(net.net)
-    criterion = nn.CrossEntropyLoss().cuda()
-    dtype = torch.cuda.FloatTensor
+    net = VGG16(len(classes), data_loaders)
 
-else:
-    criterion = nn.CrossEntropyLoss()
-    dtype = torch.FloatTensor
+    net.to(device)
 
-optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()))
+    if torch.cuda.is_available():
+        net = torch.nn.DataParallel(net.net)
+        criterion = nn.CrossEntropyLoss().cuda()
+        dtype = torch.cuda.FloatTensor
 
-net.train(criterion, optimizer, num_epochs=10)
+    else:
+        criterion = nn.CrossEntropyLoss()
+        dtype = torch.FloatTensor
+
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()))
+
+    net.train(criterion, optimizer, num_epochs=args.epochs)
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataFolder', type=str, default='Data')
+    parser.add_argument('--epochs', type=int, default=500)
+
+    args = parser.parse_args()
+
+    main(args)
+
+
 
