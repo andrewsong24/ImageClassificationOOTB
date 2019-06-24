@@ -56,8 +56,8 @@ def main(args):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataFolder', type=str, default='Data')
-    parser.add_argument('--epochs', type=int, default=500)
+    parser.add_argument('--dataFolder', type=str, default='Data', help='Name of root data folder')
+    parser.add_argument('--epochs', type=int, default=500, help='Number of epochs')
 
     args = parser.parse_args()
 
