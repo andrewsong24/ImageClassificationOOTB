@@ -4,6 +4,7 @@ import torch.optim as optim
 import os
 
 from Models.VGG import VGG16
+from Models.Custom import CustomNetworkWrapper
 import Utils.Dataset as ds
 import Utils.utils as utils
 
@@ -35,7 +36,18 @@ def main(args):
 
     data_loaders = {'train': train_loader, 'test': test_loader}
 
-    net = VGG16(len(classes), data_loaders)
+    if args.custom:
+
+        config = os.path.join(os.path.join(os.getcwd(), 'Models'), 'custom.txt')
+        net = CustomNetworkWrapper(84, len(classes), config)
+
+        print(net.net)
+
+        example_in = torch.rand(64, 4, 84, 84)  # example input for now
+        out = net.net(example_in)
+
+    else:
+        net = VGG16(len(classes), data_loaders)
 
     net.to(device)
 
@@ -58,6 +70,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataFolder', type=str, default='Data', help='Name of root data folder')
     parser.add_argument('--epochs', type=int, default=500, help='Number of epochs')
+    parser.add_argument('--custom', type=int, default=0, help='Using custom network or pre-trained VGG16')
 
     args = parser.parse_args()
 

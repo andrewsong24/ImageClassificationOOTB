@@ -15,8 +15,3 @@ def vgg16(num_classes, freeze_layers=40):
     return model
 
 
-def get_torch_script():
-
-    path = os.path.join(os.path.join(os.getcwd(), 'trained-models'), 'net.pth')
-
-    model = vgg16()
