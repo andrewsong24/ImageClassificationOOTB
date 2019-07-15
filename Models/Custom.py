@@ -40,7 +40,6 @@ class CustomNetwork(nn.Module):
 
                     self.layers.append(layer)
 
-                    print(self.fc_size)
                     self.fc_size = (self.fc_size - next_line[2] + 2 * next_line[4]) / next_line[3] + 1
                     last_out = next_line[1]
 
@@ -76,8 +75,6 @@ class CustomNetwork(nn.Module):
                 else:
                     assert False, f'Name {line} not found'
 
-        print(self.fc_size)
-
     def forward(self, x):
 
         firstFC = True
@@ -87,6 +84,5 @@ class CustomNetwork(nn.Module):
                 x = x.view(-1, self.fc_size)
             x = layer(x)
 
-        print(x.shape)
 
 

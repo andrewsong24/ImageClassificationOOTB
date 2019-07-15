@@ -1,13 +1,15 @@
 # Image Classification Out of the Box
 
-A way to use image classification **without** any programming or machine learning knowledge/experience.  
-
+A way to use image classification **without** any programming or machine learning knowledge/experience. 
+   
+With deep learning knowledge, you can easily create custom convolutional nets by changing the Models/custom.txt file to experiment with different architectures.
+  
 ## Setup:
 
 **Requirements**: Latest version of PyTorch
 
 **Data**: Root Data folder (which should be passed into the program as a command-line argument) should have subdirectories corresponding to the classes the network should predict.  
-Should have at least 10 examples per class.
+Should have at least 10 examples per class (if using pre-trained model).
 
 **Example One:**  
 ── RootDataFolder   
@@ -51,16 +53,30 @@ Should have at least 10 examples per class.
 
 
 ## Network
+
+** Custom **
+Create custom convolutional nets by editing the Models/custom.txt file.
+  
+**Layers implemented so far:**  
+  
+**conv2d**  
+input_channel output_channel kernel_size, stride, padding  
+  
+**linear**  
+input_size output_size  
+For linear layers, use IN to automatically calculate input size from conv -> linear. Use OUT as final output size for final layer. 
+  
+**Pretrained**  
 Model is a pretrained VGG-16 network that was trained on the ImageNet dataset.  
 The classification layer is dynamic enough to allow for an arbitrary amount of classes. 
   
 [ImageNet Link](http://www.image-net.org/ "ImageNet Link")  
   
-
 ## CLI
 
-Uses command-line interface.
+Command-line interface.
 
 **Arguments:**  
 Root Data Folder: --dataFolder Folder that holds the data where subfolders are classes  
 Epochs: --epochs Number of epochs
+Custom: --custom Use of custom nets (1 for yes, 0 for no)
