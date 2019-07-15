@@ -54,7 +54,7 @@ Should have at least 10 examples per class (if using pre-trained model).
 
 ## Network
 
-** Custom **
+### Custom  
 Create custom convolutional nets by editing the Models/custom.txt file.
   
 **Layers implemented so far:**  
@@ -66,7 +66,7 @@ input_channel output_channel kernel_size, stride, padding
 input_size output_size  
 For linear layers, use IN to automatically calculate input size from conv -> linear. Use OUT as final output size for final layer. 
   
-**Pretrained**  
+### Pre-trained
 Model is a pretrained VGG-16 network that was trained on the ImageNet dataset.  
 The classification layer is dynamic enough to allow for an arbitrary amount of classes. 
   
@@ -78,5 +78,5 @@ Command-line interface.
 
 **Arguments:**  
 Root Data Folder: --dataFolder Folder that holds the data where subfolders are classes  
-Epochs: --epochs Number of epochs
+Epochs: --epochs Number of epochs  
 Custom: --custom Use of custom nets (1 for yes, 0 for no)
