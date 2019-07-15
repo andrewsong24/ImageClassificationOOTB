@@ -70,6 +70,16 @@ fc
 num_neurons  
   
 For linear layers, use OUT as num_neurons for final layer. 
+
+**Max Pooling**  
+custom.txt setup:  
+maxpool2d  
+kernel_size stride
+
+**Dropout**  
+custom.txt setup:  
+dropout2d  
+probability_of_zeroed
   
 **Activation Functions (Nonlinearities)**  
 custom.txt setup:  

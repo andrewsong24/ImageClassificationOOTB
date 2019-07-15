@@ -34,8 +34,8 @@ class CustomNetwork(nn.Module):
                 line = line.strip().lower()
 
                 if line == 'conv2d':
-                    next_line = next(f)
-                    next_line = next_line[:-1].split(' ')
+                    next_line = next(f).strip()
+                    next_line = next_line.split(' ')
                     next_line = list(map(int, next_line))
 
                     layer = nn.Conv2d(in_channels=next_line[0], out_channels=next_line[1], kernel_size=next_line[2],
@@ -55,8 +55,8 @@ class CustomNetwork(nn.Module):
                     else:
                         in_dim = last_fc_size
 
-                    next_line = next(f)
-                    next_line = next_line[:-1].split(' ')
+                    next_line = next(f).strip()
+                    next_line = next_line.split(' ')
 
                     assert len(next_line) == 1, 'FC only has one number'
 
@@ -69,29 +69,38 @@ class CustomNetwork(nn.Module):
                     self.layers.append(layer)
                     last_fc_size = out_dim
 
-                elif line == 'pool':
+                elif line == 'pool2d':
 
-                    # TODO: Implement pool
+                    next_line = next(f).strip()
+                    next_line = next_line.split(' ')
+                    next_line = list(map(int, next_line))
 
-                    pass
+                    layer = nn.MaxPool2d(next_line[0], next_line[1])
+                    self.layers.append(layer)
 
-                elif line == 'dropout':
-                    pass
-                    # TODO: Implement dropout
+                    self.fc_size = (self.fc_size - next_line[0]) / next_line[1] + 1
+
+                elif line == 'dropout2d':
+
+                    next_line = next(f).strip()
+                    next_line = next_line.split(' ')
+
+                    assert len(next_line) == 1, 'Dropout only has 1 parameter'
+
+                    layer = nn.Dropout2d(float(next_line[0]))
+                    self.layers.append(layer)
 
                 elif line == 'non_lin':
 
-                    next_line = next(f).lower()
+                    next_line = next(f).lower().strip()
                     if next_line == 'relu':
                         self.non_lin = F.relu
                     elif next_line == 'tanh':
                         self.non_lin = F.tanh
                     elif next_line == 'lrelu':
                         self.non_lin = F.leaky_relu
-
                 else:
-                    if line != '':
-                        assert False, f'Name {line} not found'
+                    assert line == '', f'Name {line} not found'
 
     def forward(self, x):
 
