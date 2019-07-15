@@ -4,34 +4,40 @@ import os
 import numpy as np
 from PIL import Image
 
-transform = transforms.Compose(
 
-    [
-        transforms.Resize(250),
-        transforms.RandomCrop(224, pad_if_needed=True),
-        transforms.ColorJitter(),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ]
+def get_transform(input_dim, augment):
 
-)
+    if augment:
+        transform = transforms.Compose(
 
-non_augment_transform = transforms.Compose(
+            [
+                transforms.Resize(input_dim + 6),
+                transforms.RandomCrop(input_dim, pad_if_needed=True),
+                transforms.ColorJitter(),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ]
 
-    [
-        transforms.Resize(312),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        )
+        return transform
+    else:
+        non_augment_transform = transforms.Compose(
 
-    ]
+            [
+                transforms.Resize(input_dim+50),
+                transforms.CenterCrop(input_dim),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-)
+            ]
+
+        )
+        return non_augment_transform
 
 
 class DataSetCreator(data.Dataset):
 
-    def __init__(self, image_paths, indices, augment=True):
+    def __init__(self, image_paths, indices, input_dim, augment=True):
 
         self.image_paths = image_paths
         self.npLabels = np.array([1])
@@ -57,10 +63,7 @@ class DataSetCreator(data.Dataset):
 
         self.npLabels = np.delete(self.npLabels, [0])
 
-        if augment:
-            self.tsfm = transform
-        else:
-            self.tsfm = non_augment_transform
+        self.tsfm = get_transform(input_dim, augment)
 
     def __getitem__(self, item):
 

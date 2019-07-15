@@ -28,10 +28,10 @@ def main(args):
         train_indices.append(train)
         test_indices.append(test)
 
-    train_set = ds.DataSetCreator(image_classes_paths, train_indices)
+    train_set = ds.DataSetCreator(image_classes_paths, train_indices, input_dim=args.input_dim)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=4, shuffle=True, num_workers=2)
 
-    test_set = ds.DataSetCreator(image_classes_paths, test_indices, augment=False)
+    test_set = ds.DataSetCreator(image_classes_paths, test_indices, augment=False, input_dim=args.input_dim)
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=4, shuffle=True, num_workers=2)
 
     data_loaders = {'train': train_loader, 'test': test_loader}
@@ -39,7 +39,7 @@ def main(args):
     if args.custom:
 
         config = os.path.join(os.path.join(os.getcwd(), 'Models'), 'custom.txt')
-        net = CustomNetworkWrapper(84, len(classes), config)
+        net = CustomNetworkWrapper(args.input_dim, len(classes), config)
 
         print(net.net)
 
@@ -71,6 +71,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataFolder', type=str, default='Data', help='Name of root data folder')
     parser.add_argument('--epochs', type=int, default=500, help='Number of epochs')
     parser.add_argument('--custom', type=int, default=0, help='Using custom network or pre-trained VGG16')
+    parser.add_argument('--input_dim', type=int, default=224, help='Input dimension for custom nets (224 for pre-trained)')
 
     args = parser.parse_args()
 

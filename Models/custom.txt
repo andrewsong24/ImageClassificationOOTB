@@ -5,6 +5,9 @@ conv2d
 conv2d
 64 64 3 1 1
 fc
-IN 512
+512
 fc
-512 OUT
+OUT
+
+non_lin
+relu

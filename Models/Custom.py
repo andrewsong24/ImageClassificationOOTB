@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class CustomNetworkWrapper:
@@ -20,15 +21,17 @@ class CustomNetwork(nn.Module):
         super(CustomNetwork, self).__init__()
 
         self.layers = nn.ModuleList()
+        self.non_lin = None
 
         self.fc_size = input_dim
         last_out = 0
         firstFC = True
+        last_fc_size = 0
 
         with open(config, 'r') as f:
 
             for i, line in enumerate(f):
-                line = line.strip()
+                line = line.strip().lower()
 
                 if line == 'conv2d':
                     next_line = next(f)
@@ -48,19 +51,23 @@ class CustomNetwork(nn.Module):
                     if firstFC:
                         self.fc_size = int(self.fc_size ** 2) * last_out
                         firstFC = False
+                        in_dim = self.fc_size
+                    else:
+                        in_dim = last_fc_size
 
                     next_line = next(f)
                     next_line = next_line[:-1].split(' ')
 
-                    if next_line[0] == 'IN':
-                        next_line[0] = self.fc_size
-                    if next_line[1] == 'OUT':
-                        next_line[1] = output_dim
+                    assert len(next_line) == 1, 'FC only has one number'
 
-                    next_line = list(map(int, next_line))
+                    if next_line[0] == 'OUT':
+                        out_dim = output_dim
+                    else:
+                        out_dim = int(next_line[0])
 
-                    layer = nn.Linear(next_line[0], next_line[1])
+                    layer = nn.Linear(in_dim, out_dim)
                     self.layers.append(layer)
+                    last_fc_size = out_dim
 
                 elif line == 'pool':
 
@@ -72,16 +79,37 @@ class CustomNetwork(nn.Module):
                     pass
                     # TODO: Implement dropout
 
+                elif line == 'non_lin':
+
+                    next_line = next(f).lower()
+                    if next_line == 'relu':
+                        self.non_lin = F.relu
+                    elif next_line == 'tanh':
+                        self.non_lin = F.tanh
+                    elif next_line == 'lrelu':
+                        self.non_lin = F.leaky_relu
+
                 else:
-                    assert False, f'Name {line} not found'
+                    if line != '':
+                        assert False, f'Name {line} not found'
 
     def forward(self, x):
 
         firstFC = True
+        last_layer_type = None
+
         for layer in self.layers:
-            if firstFC and isinstance(layer, type(nn.Linear(1, 1))):
+
+            # this is used to apply non-linearity s.t. it is not applied in last linear layer
+            if last_layer_type == nn.Conv2d or last_layer_type == nn.Linear:
+                x = self.non_lin(x)
+
+            if firstFC and isinstance(layer, nn.Linear):
                 firstFC = False
                 x = x.view(-1, self.fc_size)
+
+            last_layer_type = type(layer)
+
             x = layer(x)
 
 

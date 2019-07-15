@@ -59,13 +59,33 @@ Create custom convolutional nets by editing the Models/custom.txt file.
   
 **Layers implemented so far:**  
   
-**conv2d**  
-input_channel output_channel kernel_size, stride, padding  
+**Convolutional Layer**  
+custom.txt setup:  
+conv2d  
+input_channel output_channel kernel_size stride padding  
   
-**linear**  
-input_size output_size  
-For linear layers, use IN to automatically calculate input size from conv -> linear. Use OUT as final output size for final layer. 
+**Linear Layer**  
+custom.txt setup:  
+fc  
+num_neurons  
   
+For linear layers, use OUT as num_neurons for final layer. 
+  
+**Activation Functions (Nonlinearities)**  
+custom.txt setup:  
+non_lin  
+function  (look below to find function names that can be used)
+  
+Available functions and corresponding custom.txt function name:  
+RELU:  
+relu
+
+tanh:  
+tanh  
+
+leaky RELU:  
+lrelu
+
 ### Pre-trained
 Model is a pretrained VGG-16 network that was trained on the ImageNet dataset.  
 The classification layer is dynamic enough to allow for an arbitrary amount of classes. 
