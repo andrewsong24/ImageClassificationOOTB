@@ -1,17 +1,24 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from Models.train_model import train
 
 
 class CustomNetworkWrapper:
 
-    def __init__(self, input_dim, output_dim, config):
+    def __init__(self, input_dim, output_dim, config, data_loaders):
         self.net = CustomNetwork(input_dim, output_dim, config)
+
+        self.train_loss_history = None
+        self.test_loss_history = None
+        self.data_loaders = data_loaders
 
     def to(self, device):
         self.net.to(device)
 
-    def train(self, criterion, optimizer, num_epochs):
-        pass
+    def train(self, criterion, optim, scheduler=None, num_epochs=50):
+
+        self.net, self.train_loss_history, self.test_loss_history = \
+            train(self.net, criterion, optim, self.data_loaders, scheduler, num_epochs)
 
 
 class CustomNetwork(nn.Module):
@@ -120,6 +127,8 @@ class CustomNetwork(nn.Module):
             last_layer_type = type(layer)
 
             x = layer(x)
+
+        return x
 
 
 

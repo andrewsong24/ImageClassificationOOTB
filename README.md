@@ -109,4 +109,6 @@ Command-line interface.
 **Arguments:**  
 Root Data Folder: --dataFolder Folder that holds the data where subfolders are classes  
 Epochs: --epochs Number of epochs  
-Custom: --custom Use of custom nets (1 for yes, 0 for no)
+Custom: --custom Use of custom nets (1 for yes, 0 for no)  
+Input Dimension: --input_dim Input dimension for the image  
+Learning Rate: --lr Learning rate for Adam

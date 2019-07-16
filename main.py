@@ -39,12 +39,14 @@ def main(args):
     if args.custom:
 
         config = os.path.join(os.path.join(os.getcwd(), 'Models'), 'custom.txt')
-        net = CustomNetworkWrapper(args.input_dim, len(classes), config)
+        net = CustomNetworkWrapper(args.input_dim, len(classes), config, data_loaders)
 
         print(net.net)
 
         example_in = torch.rand(64, 4, 84, 84)  # example input for now
         out = net.net(example_in)
+        print(out.shape)
+        quit()
 
     else:
         net = VGG16(len(classes), data_loaders)
@@ -60,7 +62,7 @@ def main(args):
         criterion = nn.CrossEntropyLoss()
         dtype = torch.FloatTensor
 
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()))
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()), lr=args.lr)
 
     net.train(criterion, optimizer, num_epochs=args.epochs)
 
@@ -72,6 +74,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=500, help='Number of epochs')
     parser.add_argument('--custom', type=int, default=0, help='Using custom network or pre-trained VGG16')
     parser.add_argument('--input_dim', type=int, default=224, help='Input dimension for custom nets (224 for pre-trained)')
+    parser.add_argument('--lr', type=float, default=0.001, help='Learning rate for Adam')
 
     args = parser.parse_args()
 
