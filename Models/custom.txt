@@ -1,5 +1,5 @@
 conv2d
-4 16 8 4 0
+3 16 8 4 0
 pool2d
 2 2
 conv2d

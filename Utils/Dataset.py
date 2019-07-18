@@ -11,7 +11,7 @@ def get_transform(input_dim, augment):
         transform = transforms.Compose(
 
             [
-                transforms.Resize(input_dim + 6),
+                transforms.Resize(input_dim),
                 transforms.RandomCrop(input_dim, pad_if_needed=True),
                 transforms.ColorJitter(),
                 transforms.ToTensor(),
@@ -24,7 +24,7 @@ def get_transform(input_dim, augment):
         non_augment_transform = transforms.Compose(
 
             [
-                transforms.Resize(input_dim+50),
+                transforms.Resize(input_dim),
                 transforms.CenterCrop(input_dim),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
