@@ -109,6 +109,12 @@ Command-line interface.
 **Arguments:**  
 Root Data Folder: --dataFolder Folder that holds the data where subfolders are classes  
 Epochs: --epochs Number of epochs  
+Batch Size: --bs Batch size  
+Train Percent: --train_percent Percent of training set  
+Validation Percent: --val_percent Percent of validation set  
+Test Percent: --test_percent Percent of test set  
 Custom: --custom Use of custom nets (1 for yes, 0 for no)  
+Number of frozen layers: --num_layers_frozen Number of layers to freeze if using pre-trained VGG15
 Input Dimension: --input_dim Input dimension for the image  
 Learning Rate: --lr Learning rate for Adam
+

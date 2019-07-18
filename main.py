@@ -23,16 +23,16 @@ def main(args):
         class_len = len(os.listdir(i_class))
 
         train, val, test = \
-            utils.get_indices(class_len, train_percent=0.8, val_percent=0.0, test_percent=0.2)
+            utils.get_indices(class_len, train_percent=args.train_percent, val_percent=args.val_percent, test_percent=args.test_percent)
 
         train_indices.append(train)
         test_indices.append(test)
 
     train_set = ds.DataSetCreator(image_classes_paths, train_indices, input_dim=args.input_dim)
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=4, shuffle=True, num_workers=2)
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.bs, shuffle=True, num_workers=2)
 
     test_set = ds.DataSetCreator(image_classes_paths, test_indices, augment=False, input_dim=args.input_dim)
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=4, shuffle=True, num_workers=2)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=args.bs, shuffle=True, num_workers=2)
 
     data_loaders = {'train': train_loader, 'test': test_loader}
 
@@ -40,13 +40,10 @@ def main(args):
 
         config = os.path.join(os.path.join(os.getcwd(), 'Models'), 'custom.txt')
         net = CustomNetworkWrapper(args.input_dim, len(classes), config, data_loaders)
-
         print(net.net)
 
-        example_in = torch.rand(64, 4, 84, 84)  # example input for now
-
     else:
-        net = VGG16(len(classes), data_loaders)
+        net = VGG16(len(classes), data_loaders, freeze_layers=args.num_layers_frozen)
 
     net.to(device)
 
@@ -69,7 +66,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataFolder', type=str, default='Data', help='Name of root data folder')
     parser.add_argument('--epochs', type=int, default=500, help='Number of epochs')
+    parser.add_argument('--bs', type=int, default=4, help='Batch Size')
+    parser.add_argument('--train_percent', type=float, default=0.7, help='Percent of training set')
+    parser.add_argument('--val_percent', type=float, default=0.15, help='Percent of validation set')
+    parser.add_argument('--test_percent', type=float, default=0.15, help='Percent of test set')
     parser.add_argument('--custom', type=int, default=0, help='Using custom network or pre-trained VGG16')
+    parser.add_argument('--num_layers_frozen', type=int, default=40, help='Number of layers to freeze for pre-trained VGG16')
     parser.add_argument('--input_dim', type=int, default=224, help='Input dimension for custom nets (224 for pre-trained)')
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate for Adam')
 
