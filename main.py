@@ -44,9 +44,6 @@ def main(args):
         print(net.net)
 
         example_in = torch.rand(64, 4, 84, 84)  # example input for now
-        out = net.net(example_in)
-        print(out.shape)
-        quit()
 
     else:
         net = VGG16(len(classes), data_loaders)

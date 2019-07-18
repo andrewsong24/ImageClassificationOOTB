@@ -1,6 +1,5 @@
 import torchvision.models as models
 import torch.nn as nn
-import os
 
 
 def vgg16(num_classes, freeze_layers=40):
