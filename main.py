@@ -46,15 +46,7 @@ def main(args):
         net = VGG16(len(classes), data_loaders, freeze_layers=args.num_layers_frozen)
 
     net.to(device)
-
-    if torch.cuda.is_available():
-        net = torch.nn.DataParallel(net.net)
-        criterion = nn.CrossEntropyLoss().cuda()
-        dtype = torch.cuda.FloatTensor
-
-    else:
-        criterion = nn.CrossEntropyLoss()
-        dtype = torch.FloatTensor
+    criterion = nn.CrossEntropyLoss().to(device)
 
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, net.net.parameters()), lr=args.lr)
 

@@ -7,7 +7,7 @@ import copy
 def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    save_path = os.path.join(os.getcwd(), 'trained-models/net.pth')
+    save_path = os.path.join(os.path.join(os.getcwd(), 'trained-models'), 'net.pth')
 
     train_loss_history = []
     test_loss_history = []
@@ -70,7 +70,7 @@ def train(model, criterion, optim, data_loaders, scheduler, num_epochs):
 
             train_loss_history.append(epoch_loss) if phase == 'train' else test_loss_history.append(epoch_loss)
 
-            print(f'Loss: {epoch_loss}, Accuracy: {epoch_acc}')
+            print(f'Loss: {round(epoch_loss, 4)}, Accuracy: {round(epoch_acc, 4)}')
 
             if phase == 'test' and epoch_acc > best_acc:
                 best_acc = epoch_acc
