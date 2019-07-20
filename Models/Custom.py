@@ -33,6 +33,7 @@ class CustomNetwork(nn.Module):
 
         self.fc_size = input_dim
         last_out = 0
+        prev_channel_size = None
         firstFC = True
         last_fc_size = 0
 
@@ -46,9 +47,12 @@ class CustomNetwork(nn.Module):
                     next_line = next_line.split(' ')
                     next_line = list(map(int, next_line))
 
+                    assert len(next_line) == 5, f'Conv layer has 5 parameters. You inputted {len(next_line)}'
+
                     layer = nn.Conv2d(in_channels=next_line[0], out_channels=next_line[1], kernel_size=next_line[2],
                                       stride=next_line[3], padding=next_line[4])
 
+                    prev_channel_size = next_line[1]
                     self.layers.append(layer)
 
                     self.fc_size = (self.fc_size - next_line[2] + 2 * next_line[4]) / next_line[3] + 1
@@ -66,7 +70,7 @@ class CustomNetwork(nn.Module):
                     next_line = next(f).strip()
                     next_line = next_line.split(' ')
 
-                    assert len(next_line) == 1, 'FC only has one number'
+                    assert len(next_line) == 1, f'FC has 1 parameter. You inputted {len(next_line)}'
 
                     if next_line[0] == 'OUT':
                         out_dim = output_dim
@@ -93,9 +97,25 @@ class CustomNetwork(nn.Module):
                     next_line = next(f).strip()
                     next_line = next_line.split(' ')
 
-                    assert len(next_line) == 1, 'Dropout only has 1 parameter'
+                    assert len(next_line) == 1, f'Dropout has 1 parameter. You inputted {len(next_line)}'
 
                     layer = nn.Dropout2d(float(next_line[0]))
+                    self.layers.append(layer)
+
+                elif line == 'batchnorm2d':
+
+                    next_line = next(f).strip()
+                    next_line = next_line.split(' ')
+
+                    assert len(next_line) == 1, f'BatchNorm has 1 parameter. You inputted {len(next_line)}'
+                    assert prev_channel_size is not None, 'BatchNorm should not be the first layer of your network'
+
+                    if 't' in next_line[0].lower():
+                        affine = True
+                    else:
+                        affine = False
+
+                    layer = nn.BatchNorm2d(prev_channel_size, affine)
                     self.layers.append(layer)
 
                 elif line == 'non_lin':

@@ -6,6 +6,8 @@ conv2d
 16 64 4 2 0
 pool2d
 2 2
+batchnorm2d
+true
 dropout2d
 0.5
 conv2d

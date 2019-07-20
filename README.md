@@ -1,15 +1,13 @@
 # Image Classification Out of the Box
 
-A way to use image classification **without** any programming or machine learning knowledge/experience. 
+A way to use image classification **without** needing any programming or machine learning knowledge/experience. 
    
-With deep learning knowledge, you can easily create custom convolutional nets by changing the Models/custom.txt file to experiment with different architectures.
+However, with deep learning knowledge, you can easily create custom convolutional nets by changing the Models/custom.txt file to experiment with different architectures.
   
 ## Setup:
 
-**Requirements**: Latest version of PyTorch
-
 **Data**: Root Data folder (which should be passed into the program as a command-line argument) should have subdirectories corresponding to the classes the network should predict.  
-Should have at least 10 examples per class (if using pre-trained model).
+If using the pre-trained network, less data will be fine.
 
 **Example One:**  
 ── RootDataFolder   
@@ -57,7 +55,7 @@ Should have at least 10 examples per class (if using pre-trained model).
 ### Custom  
 Create custom convolutional nets by editing the Models/custom.txt file.
   
-**Layers implemented so far:**  
+#### Layers implemented so far:  
   
 **Convolutional Layer**  
 custom.txt setup:  
@@ -79,14 +77,19 @@ kernel_size stride
 **Dropout**  
 custom.txt setup:  
 dropout2d  
-probability_of_zeroed
-  
-**Activation Functions (Nonlinearities)**  
+probability_of_zeroed (float)  
+
+**BatchNorm**  
 custom.txt setup:  
-non_lin  
-function  (look below to find function names that can be used)
+batchnorm2d  
+trainable_parameters (true/t or false/f) 
   
-Available functions and corresponding custom.txt function name: 
+#### Activation Functions (Nonlinearities)  
+**custom.txt setup:**  
+non_lin  
+function  (look below to find function names that can be used)  
+  
+**Available functions and corresponding custom.txt function name:**  
    
 RELU:  
 relu
@@ -103,7 +106,7 @@ sigmoid
 
 ### Pre-trained
 Model is a pretrained VGG-16 network that was trained on the ImageNet dataset.  
-The classification layer is dynamic enough to allow for an arbitrary amount of classes. 
+The final layer is dynamic enough to allow for an arbitrary amount of classes. 
   
 [ImageNet Link](http://www.image-net.org/ "ImageNet Link")  
   
