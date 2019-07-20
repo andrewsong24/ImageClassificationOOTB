@@ -86,15 +86,20 @@ custom.txt setup:
 non_lin  
 function  (look below to find function names that can be used)
   
-Available functions and corresponding custom.txt function name:  
+Available functions and corresponding custom.txt function name: 
+   
 RELU:  
 relu
 
 tanh:  
 tanh  
 
-leaky RELU:  
-lrelu
+Leaky RELU:  
+lrelu  
+  
+Sigmoid:  
+sigmoid  
+
 
 ### Pre-trained
 Model is a pretrained VGG-16 network that was trained on the ImageNet dataset.  

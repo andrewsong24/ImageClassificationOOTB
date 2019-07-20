@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from Models.train_model import train
+import torch
 
 
 class CustomNetworkWrapper:
@@ -106,6 +107,8 @@ class CustomNetwork(nn.Module):
                         self.non_lin = F.tanh
                     elif next_line == 'lrelu':
                         self.non_lin = F.leaky_relu
+                    elif next_line == 'sigmoid':
+                        self.non_lin = torch.sigmoid
                 else:
                     assert line == '', f'Name {line} not found'
 
